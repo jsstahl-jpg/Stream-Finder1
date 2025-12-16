@@ -13,40 +13,40 @@ let userSelectedPlatforms = [];
 // ========================================
 const CHATBOT_RULES = {
     patterns: [
-        { keywords: ['action', 'fight', 'fighting', 'adrenaline', 'explosive', 'explosion', 'thrill', 'thrilling', 'battle', 'combat', 'chase', 'gun', 'shooting', 'assassin', 'spy', 'agent', 'martial arts', 'kung fu', 'karate', 'superhero', 'comic book', 'vigilante', 'revenge', 'vengeance', 'heist', 'robbery', 'car chase', 'parkour', 'stunts', 'mission', 'special ops', 'tactical', 'warfare', 'commando', 'sniper', 'mercenary', 'bounty hunter', 'sword fight', 'samurai', 'ninja', 'gunfight', 'shootout', 'explosives', 'bomb', 'hostage', 'rescue'], genres: [28, 53], mood: 'Action' },
-        { keywords: ['adventure', 'explore', 'exploring', 'exploration', 'journey', 'quest', 'expedition', 'treasure', 'treasure hunt', 'island', 'jungle', 'desert', 'mountain', 'discovery', 'epic', 'voyage', 'pirate', 'lost city', 'ancient', 'relic', 'artifact', 'wilderness', 'survival adventure', 'exotic', 'safari', 'expedition team'], genres: [12, 14], mood: 'Adventure' },
-        { keywords: ['comedy', 'funny', 'laugh', 'laughing', 'humor', 'humorous', 'hilarious', 'comedic', 'quirky', 'witty', 'silly', 'goofy', 'parody', 'satire', 'satirical', 'slapstick', 'romantic comedy', 'romcom', 'dark comedy', 'black comedy', 'mockumentary', 'absurd', 'ridiculous', 'joke', 'stand-up', 'comedian', 'screwball', 'farce', 'spoof', 'comedy of errors', 'buddy comedy', 'fish out of water', 'mistaken identity', 'sarcastic', 'deadpan', 'ironic', 'irreverent', 'wacky', 'zany', 'madcap', 'lighthearted comedy'], genres: [35], mood: 'Comedy' },
-        { keywords: ['romantic', 'romance', 'love', 'love story', 'couple', 'dating', 'relationship', 'date night', 'sweet love', 'passionate', 'affair', 'wedding', 'marriage', 'soulmate', 'heartbreak', 'breakup', 'valentine', 'kissing', 'intimacy', 'crush', 'falling in love', 'true love', 'soul mate', 'love triangle', 'forbidden love', 'star-crossed', 'lovers', 'courtship', 'engagement', 'proposal', 'eternal love', 'unrequited love', 'first love', 'second chance romance', 'enemies to lovers', 'fake relationship', 'arranged marriage'], genres: [10749], mood: 'Romantic' },
-        { keywords: ['horror', 'scary', 'terror', 'terrifying', 'spooky', 'frightening', 'creepy', 'supernatural', 'ghost', 'haunted', 'haunting', 'demon', 'possession', 'exorcism', 'zombie', 'vampire', 'monster', 'creature', 'slasher', 'gore', 'bloody', 'disturbing', 'nightmare', 'paranormal', 'occult', 'witchcraft', 'evil', 'dark', 'sinister', 'cursed', 'undead', 'werewolf', 'beast', 'mutant', 'killer', 'serial killer', 'psycho', 'maniac', 'stalker', 'found footage', 'body horror', 'cosmic horror', 'lovecraftian', 'psychological horror', 'survival horror', 'jump scare'], genres: [27], mood: 'Horror' },
-        { keywords: ['thriller', 'suspense', 'suspenseful', 'tense', 'tension', 'mystery', 'mysterious', 'crime', 'detective', 'investigation', 'whodunit', 'murder', 'killer', 'serial killer', 'psychological', 'mind game', 'twist', 'plot twist', 'conspiracy', 'espionage', 'noir', 'neo-noir', 'cat and mouse', 'double cross', 'betrayal', 'corruption', 'cover-up', 'puzzle', 'riddle', 'clues', 'forensic', 'cold case', 'manhunt', 'chase thriller', 'political thriller', 'techno-thriller', 'legal thriller', 'medical thriller', 'erotic thriller'], genres: [53, 9648, 80], mood: 'Thriller' },
-        { keywords: ['drama', 'dramatic', 'emotional', 'touching', 'serious', 'intense', 'powerful', 'moving', 'deep', 'tear-jerker', 'tearjerker', 'sad', 'melancholy', 'poignant', 'bittersweet', 'tragic', 'tragedy', 'coming of age', 'coming-of-age', 'family drama', 'character study', 'slice of life', 'realistic', 'gritty', 'raw', 'courtroom', 'legal drama', 'medical drama', 'redemption', 'loss', 'grief', 'mourning', 'sacrifice', 'struggle', 'hardship', 'poverty', 'addiction', 'recovery', 'mental health', 'identity', 'self-discovery', 'ambition', 'rivalry', 'jealousy', 'regret', 'forgiveness'], genres: [18], mood: 'Drama' },
-        { keywords: ['sci-fi', 'scifi', 'science fiction', 'futuristic', 'future', 'space', 'outer space', 'spaceship', 'alien', 'aliens', 'extraterrestrial', 'dystopian', 'dystopia', 'utopia', 'cyberpunk', 'steampunk', 'time travel', 'robot', 'android', 'artificial intelligence', 'AI', 'virtual reality', 'parallel universe', 'alternate reality', 'apocalypse', 'post-apocalyptic', 'wasteland', 'cyborg', 'clone', 'cloning', 'genetic engineering', 'mutation', 'teleportation', 'wormhole', 'black hole', 'interstellar', 'intergalactic', 'space opera', 'space exploration', 'terraforming', 'colony', 'first contact', 'invasion', 'alien invasion', 'mind control', 'telepathy', 'superhuman', 'nanobots', 'hologram', 'simulation'], genres: [878], mood: 'Sci-Fi' },
-        { keywords: ['fantasy', 'magic', 'magical', 'wizard', 'witch', 'sorcerer', 'dragon', 'mythical', 'mythology', 'myth', 'legend', 'legendary', 'fairytale', 'fairy tale', 'enchanted', 'medieval', 'sword', 'sorcery', 'spell', 'potion', 'quest', 'epic fantasy', 'high fantasy', 'dark fantasy', 'elf', 'dwarf', 'orc', 'goblin', 'troll', 'giant', 'unicorn', 'phoenix', 'griffin', 'centaur', 'mermaid', 'vampire fantasy', 'werewolf fantasy', 'shapeshifter', 'prophecy', 'chosen one', 'kingdom', 'realm', 'enchantress', 'warlock', 'necromancer', 'portal', 'dimension', 'crystal', 'rune', 'curse'], genres: [14, 12], mood: 'Fantasy' },
-        { keywords: ['animation', 'animated', 'cartoon', 'anime', 'hand-drawn', 'stop-motion', 'claymation', 'cgi', '3d animation', '2d animation', 'pixar', 'disney', 'dreamworks', 'studio ghibli', 'family animation', 'adult animation', 'anime series', 'manga adaptation', 'cel animation', 'rotoscope', 'motion capture'], genres: [16], mood: 'Animation' },
-        { keywords: ['documentary', 'docuseries', 'doc', 'true story', 'real', 'real life', 'real-life', 'biography', 'biopic', 'biographical', 'non-fiction', 'factual', 'educational', 'informative', 'investigation', 'expose', 'nature documentary', 'wildlife', 'historical documentary', 'social documentary', 'political documentary', 'crime documentary', 'true crime', 'investigative', 'observational', 'fly on the wall', 'talking heads', 'archival', 'propaganda'], genres: [99], mood: 'Documentary' },
-        { keywords: ['family', 'kids', 'children', "children's", 'child', 'family-friendly', 'wholesome', 'innocent', 'fun for all', 'all ages', 'parents', 'kids movie', 'bedtime story', 'talking animals', 'adventure family', 'family values', 'multigenerational', 'grandparents', 'siblings', 'adoption', 'foster'], genres: [10751, 16], mood: 'Family' },
-        { keywords: ['historical', 'history', 'period', 'period piece', 'costume drama', 'based on true', 'true events', 'war', 'world war', 'wwii', 'ww2', 'vietnam', 'civil war', 'revolutionary', 'renaissance', 'victorian', 'medieval', 'ancient', 'empire', 'dynasty', 'historical fiction', 'historical romance', 'epic historical', 'biographical drama', 'war drama', 'battle', 'military', 'soldier', 'navy', 'air force', 'army', 'marines', 'veteran', 'pow', 'resistance', 'occupation', 'liberation', 'd-day', 'pearl harbor', 'holocaust', 'cold war', 'korean war'], genres: [10752, 36, 18], mood: 'Historical' },
-        { keywords: ['music', 'musical', 'concert', 'band', 'singer', 'song', 'singing', 'rock', 'pop', 'jazz', 'hip hop', 'rap', 'orchestra', 'opera', 'broadway', 'dance', 'dancing', 'musician', 'composer', 'songwriter', 'rockstar', 'pop star', 'diva', 'choir', 'acoustic', 'classical music', 'rock and roll', 'country music', 'blues', 'soul', 'r&b', 'electronic music', 'dj', 'music video', 'recording studio', 'tour', 'festival', 'jukebox musical', 'backstage musical'], genres: [10402, 18], mood: 'Music' },
-        { keywords: ['sports', 'sport', 'athlete', 'athletic', 'game', 'competition', 'championship', 'tournament', 'football', 'basketball', 'baseball', 'soccer', 'hockey', 'boxing', 'wrestling', 'racing', 'olympics', 'coach', 'underdog', 'team', 'training', 'comeback', 'rivalry', 'championship game', 'playoffs', 'world cup', 'super bowl', 'marathon', 'triathlon', 'extreme sports', 'surfing', 'skateboarding', 'snowboarding', 'skiing', 'cycling', 'tennis', 'golf', 'swimming', 'track and field'], genres: [99, 18], mood: 'Sports' },
-        { keywords: ['western', 'cowboy', 'cowboys', 'wild west', 'frontier', 'outlaw', 'sheriff', 'gunslinger', 'saloon', 'ranch', 'spaghetti western', 'bounty', 'duel', 'cattle drive', 'gold rush', 'lawman', 'desperado', 'rustler', 'homestead', 'pioneer'], genres: [37], mood: 'Western' },
-        { keywords: ['heartwarming', 'heartfelt', 'uplifting', 'inspiring', 'inspirational', 'feel-good', 'feel good', 'wholesome', 'sweet', 'touching', 'warm', 'cozy', 'comforting', 'happy', 'joyful', 'optimistic', 'hopeful'], genres: [10749, 35, 18, 10751], mood: 'Heartwarming' },
-        { keywords: ['dark', 'gritty', 'disturbing', 'depressing', 'bleak', 'heavy', 'intense', 'hardcore', 'violent', 'brutal', 'graphic', 'mature', 'adult themes', 'controversial'], genres: [18, 53, 27, 80], mood: 'Dark' },
-        { keywords: ['thought-provoking', 'thought provoking', 'philosophical', 'cerebral', 'intelligent', 'smart', 'complex', 'deep', 'meaningful', 'profound', 'existential', 'metaphysical'], genres: [18, 878, 9648], mood: 'Thought-Provoking' },
-        { keywords: ['lighthearted', 'light-hearted', 'easy watching', 'easy watch', 'relaxing', 'chill', 'laid back', 'casual', 'breezy', 'carefree'], genres: [35, 10749, 10751], mood: 'Lighthearted' },
-        { keywords: ['food', 'cooking', 'chef', 'restaurant', 'culinary', 'cuisine', 'baker', 'baking', 'dinner', 'meal', 'recipe', 'gastronomy', 'food truck', 'master chef', 'competition cooking'], genres: [35, 18, 99], mood: 'Food' },
-        { keywords: ['nostalgic', 'nostalgia', 'childhood', 'memory', 'memories', 'retro', 'throwback', 'old school', 'classic', '80s', '90s', 'vintage', 'period nostalgia', 'coming of age nostalgia'], genres: [18, 35, 10751], mood: 'Nostalgic' },
-        { keywords: ['travel', 'traveling', 'vacation', 'trip', 'journey', 'wanderlust', 'destination', 'road trip', 'backpacking', 'adventure travel', 'cultural journey', 'world tour', 'globe-trotting'], genres: [12, 99, 18], mood: 'Travel' },
-        { keywords: ['mind-bending', 'mind bending', 'trippy', 'surreal', 'surrealism', 'strange', 'weird', 'bizarre', 'psychedelic', 'abstract', 'experimental', 'unconventional', 'avant-garde', 'dreamlike', 'nonlinear'], genres: [878, 9648, 53], mood: 'Mind-Bending' },
-        { keywords: ['heist', 'con', 'con artist', 'scam', 'theft', 'robbery', 'steal', 'criminal', 'mastermind', 'clever', 'caper', 'bank robbery', 'casino heist', 'art theft', 'jewel heist', 'elaborate plan'], genres: [80, 53, 28], mood: 'Heist' },
-        { keywords: ['friendship', 'friends', 'buddy', 'bromance', 'camaraderie', 'bond', 'bonding', 'best friends', 'platonic', 'loyalty', 'bff'], genres: [35, 18, 12], mood: 'Friendship' },
-        { keywords: ['survival', 'stranded', 'isolated', 'alone', 'wilderness', 'trapped', 'lost', 'castaway', 'deserted island', 'plane crash', 'shipwreck', 'against the elements'], genres: [12, 18, 53], mood: 'Survival' },
-        { keywords: ['political', 'politics', 'government', 'election', 'power', 'corruption', 'scandal', 'conspiracy', 'white house', 'parliament', 'senator', 'president', 'campaign'], genres: [18, 53, 99], mood: 'Political' },
-        { keywords: ['nature', 'wildlife', 'environment', 'ocean', 'forest', 'animals', 'planet', 'earth', 'ecology', 'conservation', 'biodiversity', 'rainforest', 'safari'], genres: [99, 12], mood: 'Nature' },
-        { keywords: ['technology', 'tech', 'computer', 'hacker', 'hacking', 'internet', 'social media', 'startup', 'silicon valley', 'programming', 'cyber', 'digital', 'innovation'], genres: [878, 53, 99], mood: 'Technology' },
-        { keywords: ['art', 'artist', 'painter', 'painting', 'museum', 'creativity', 'creative', 'sculpture', 'gallery', 'masterpiece', 'renaissance art', 'modern art', 'impressionism'], genres: [18, 99], mood: 'Art' },
-        { keywords: ['cult', 'cult classic', 'underground', 'indie', 'independent', 'arthouse', 'art house', 'foreign', 'international', 'criterion', 'auteur'], genres: [18, 35, 9648], mood: 'Cult' },
-        { keywords: ['top rated', 'highest rated', 'best rated', 'best films', 'best movies', 'critically acclaimed', 'award winning', 'oscar', 'academy award', 'golden globe', 'cannes', 'sundance', 'masterpiece'], genres: [18, 28, 35, 878, 53], mood: 'Top-Rated' },
-        { keywords: ['similar to', 'similar films', 'similar movies', 'recommendations like', 'movies like', 'shows like', 'like this', 'something like'], genres: [], mood: 'Similar Movies', isSimilarSearch: true }
+        { keywords: ['action', 'fight', 'fighting', 'adrenaline', 'explosive', 'explosion', 'thrill', 'thrilling', 'battle', 'combat', 'chase', 'gun', 'shooting', 'assassin', 'spy', 'agent', 'martial arts', 'kung fu', 'karate', 'superhero', 'comic book', 'vigilante', 'revenge', 'vengeance', 'heist', 'robbery', 'car chase', 'parkour', 'stunts', 'mission', 'special ops', 'tactical', 'warfare', 'commando', 'sniper', 'mercenary', 'bounty hunter', 'sword fight', 'samurai', 'ninja', 'gunfight', 'shootout', 'explosives', 'bomb', 'hostage', 'rescue', 'spec ops', 'black ops', 'covert', 'undercover', 'infiltration', 'extraction', 'raid', 'strike team', 'fast-paced', 'high-octane', 'pulse-pounding', 'edge of your seat', 'adrenaline rush'], genres: [28, 53], mood: 'Action' },
+        { keywords: ['adventure', 'explore', 'exploring', 'exploration', 'journey', 'quest', 'expedition', 'treasure', 'treasure hunt', 'island', 'jungle', 'desert', 'mountain', 'discovery', 'epic', 'voyage', 'pirate', 'lost city', 'ancient', 'relic', 'artifact', 'wilderness', 'survival adventure', 'exotic', 'safari', 'expedition team', 'uncharted', 'mysterious island', 'tomb raider', 'indiana jones style', 'swashbuckling', 'high seas', 'buried treasure', 'map', 'compass', 'explorer', 'archaeologist'], genres: [12, 14], mood: 'Adventure' },
+        { keywords: ['comedy', 'funny', 'laugh', 'laughing', 'humor', 'humorous', 'hilarious', 'comedic', 'quirky', 'witty', 'silly', 'goofy', 'parody', 'satire', 'satirical', 'slapstick', 'romantic comedy', 'romcom', 'dark comedy', 'black comedy', 'mockumentary', 'absurd', 'ridiculous', 'joke', 'stand-up', 'comedian', 'screwball', 'farce', 'spoof', 'comedy of errors', 'buddy comedy', 'fish out of water', 'mistaken identity', 'sarcastic', 'deadpan', 'ironic', 'irreverent', 'wacky', 'zany', 'madcap', 'lighthearted comedy', 'feel-good comedy', 'laugh out loud', 'side-splitting', 'rib-tickling', 'comic', 'amusing', 'entertaining', 'playful', 'whimsical'], genres: [35], mood: 'Comedy' },
+        { keywords: ['romantic', 'romance', 'love', 'love story', 'couple', 'dating', 'relationship', 'date night', 'sweet love', 'passionate', 'affair', 'wedding', 'marriage', 'soulmate', 'heartbreak', 'breakup', 'valentine', 'kissing', 'intimacy', 'crush', 'falling in love', 'true love', 'soul mate', 'love triangle', 'forbidden love', 'star-crossed', 'lovers', 'courtship', 'engagement', 'proposal', 'eternal love', 'unrequited love', 'first love', 'second chance romance', 'enemies to lovers', 'fake relationship', 'arranged marriage', 'love at first sight', 'sweetheart', 'romantic getaway', 'passionate kiss', 'chemistry', 'spark', 'butterflies', 'heart flutter'], genres: [10749], mood: 'Romantic' },
+        { keywords: ['horror', 'scary', 'terror', 'terrifying', 'spooky', 'frightening', 'creepy', 'supernatural', 'ghost', 'haunted', 'haunting', 'demon', 'possession', 'exorcism', 'zombie', 'vampire', 'monster', 'creature', 'slasher', 'gore', 'bloody', 'disturbing', 'nightmare', 'paranormal', 'occult', 'witchcraft', 'evil', 'dark', 'sinister', 'cursed', 'undead', 'werewolf', 'beast', 'mutant', 'killer', 'serial killer', 'psycho', 'maniac', 'stalker', 'found footage', 'body horror', 'cosmic horror', 'lovecraftian', 'psychological horror', 'survival horror', 'jump scare', 'spine-chilling', 'blood-curdling', 'bone-chilling', 'hair-raising', 'macabre', 'eerie', 'dread', 'terror', 'fright'], genres: [27], mood: 'Horror' },
+        { keywords: ['thriller', 'suspense', 'suspenseful', 'tense', 'tension', 'mystery', 'mysterious', 'crime', 'detective', 'investigation', 'whodunit', 'murder', 'killer', 'serial killer', 'psychological', 'mind game', 'twist', 'plot twist', 'conspiracy', 'espionage', 'noir', 'neo-noir', 'cat and mouse', 'double cross', 'betrayal', 'corruption', 'cover-up', 'puzzle', 'riddle', 'clues', 'forensic', 'cold case', 'manhunt', 'chase thriller', 'political thriller', 'techno-thriller', 'legal thriller', 'medical thriller', 'erotic thriller', 'gripping', 'edge of seat', 'nail-biting', 'heart-pounding', 'page-turner', 'unpredictable', 'shocking twist'], genres: [53, 9648, 80], mood: 'Thriller' },
+        { keywords: ['drama', 'dramatic', 'emotional', 'touching', 'serious', 'intense', 'powerful', 'moving', 'deep', 'tear-jerker', 'tearjerker', 'sad', 'melancholy', 'poignant', 'bittersweet', 'tragic', 'tragedy', 'coming of age', 'coming-of-age', 'family drama', 'character study', 'slice of life', 'realistic', 'gritty', 'raw', 'courtroom', 'legal drama', 'medical drama', 'redemption', 'loss', 'grief', 'mourning', 'sacrifice', 'struggle', 'hardship', 'poverty', 'addiction', 'recovery', 'mental health', 'identity', 'self-discovery', 'ambition', 'rivalry', 'jealousy', 'regret', 'forgiveness', 'compelling', 'thought-provoking', 'character-driven', 'human condition', 'life-changing'], genres: [18], mood: 'Drama' },
+        { keywords: ['sci-fi', 'scifi', 'science fiction', 'futuristic', 'future', 'space', 'outer space', 'spaceship', 'alien', 'aliens', 'extraterrestrial', 'dystopian', 'dystopia', 'utopia', 'cyberpunk', 'steampunk', 'time travel', 'robot', 'android', 'artificial intelligence', 'AI', 'virtual reality', 'parallel universe', 'alternate reality', 'apocalypse', 'post-apocalyptic', 'wasteland', 'cyborg', 'clone', 'cloning', 'genetic engineering', 'mutation', 'teleportation', 'wormhole', 'black hole', 'interstellar', 'intergalactic', 'space opera', 'space exploration', 'terraforming', 'colony', 'first contact', 'invasion', 'alien invasion', 'mind control', 'telepathy', 'superhuman', 'nanobots', 'hologram', 'simulation', 'matrix', 'singularity', 'transhumanism', 'bioengineering', 'quantum', 'dimension', 'multiverse'], genres: [878], mood: 'Sci-Fi' },
+        { keywords: ['fantasy', 'magic', 'magical', 'wizard', 'witch', 'sorcerer', 'dragon', 'mythical', 'mythology', 'myth', 'legend', 'legendary', 'fairytale', 'fairy tale', 'enchanted', 'medieval', 'sword', 'sorcery', 'spell', 'potion', 'quest', 'epic fantasy', 'high fantasy', 'dark fantasy', 'elf', 'dwarf', 'orc', 'goblin', 'troll', 'giant', 'unicorn', 'phoenix', 'griffin', 'centaur', 'mermaid', 'vampire fantasy', 'werewolf fantasy', 'shapeshifter', 'prophecy', 'chosen one', 'kingdom', 'realm', 'enchantress', 'warlock', 'necromancer', 'portal', 'dimension', 'crystal', 'rune', 'curse', 'magic sword', 'mystical', 'supernatural powers', 'spellcasting', 'enchantment'], genres: [14, 12], mood: 'Fantasy' },
+        { keywords: ['animation', 'animated', 'cartoon', 'anime', 'hand-drawn', 'stop-motion', 'claymation', 'cgi', '3d animation', '2d animation', 'pixar', 'disney', 'dreamworks', 'studio ghibli', 'family animation', 'adult animation', 'anime series', 'manga adaptation', 'cel animation', 'rotoscope', 'motion capture', 'computer animated', 'hand drawn'], genres: [16], mood: 'Animation' },
+        { keywords: ['documentary', 'docuseries', 'doc', 'true story', 'real', 'real life', 'real-life', 'biography', 'biopic', 'biographical', 'non-fiction', 'factual', 'educational', 'informative', 'investigation', 'expose', 'nature documentary', 'wildlife', 'historical documentary', 'social documentary', 'political documentary', 'crime documentary', 'true crime', 'investigative', 'observational', 'fly on the wall', 'talking heads', 'archival', 'propaganda', 'exposé', 'journalistic', 'real events', 'based on true events', 'real people'], genres: [99], mood: 'Documentary' },
+        { keywords: ['family', 'kids', 'children', "children's", 'child', 'family-friendly', 'wholesome', 'innocent', 'fun for all', 'all ages', 'parents', 'kids movie', 'bedtime story', 'talking animals', 'adventure family', 'family values', 'multigenerational', 'grandparents', 'siblings', 'adoption', 'foster', 'safe for kids', 'kid-friendly', 'family fun', 'family entertainment'], genres: [10751, 16], mood: 'Family' },
+        { keywords: ['historical', 'history', 'period', 'period piece', 'costume drama', 'based on true', 'true events', 'war', 'world war', 'wwii', 'ww2', 'vietnam', 'civil war', 'revolutionary', 'renaissance', 'victorian', 'medieval', 'ancient', 'empire', 'dynasty', 'historical fiction', 'historical romance', 'epic historical', 'biographical drama', 'war drama', 'battle', 'military', 'soldier', 'navy', 'air force', 'army', 'marines', 'veteran', 'pow', 'resistance', 'occupation', 'liberation', 'd-day', 'pearl harbor', 'holocaust', 'cold war', 'korean war', 'historical epic', 'period drama', 'bygone era', 'historical setting'], genres: [10752, 36, 18], mood: 'Historical' },
+        { keywords: ['music', 'musical', 'concert', 'band', 'singer', 'song', 'singing', 'rock', 'pop', 'jazz', 'hip hop', 'rap', 'orchestra', 'opera', 'broadway', 'dance', 'dancing', 'musician', 'composer', 'songwriter', 'rockstar', 'pop star', 'diva', 'choir', 'acoustic', 'classical music', 'rock and roll', 'country music', 'blues', 'soul', 'r&b', 'electronic music', 'dj', 'music video', 'recording studio', 'tour', 'festival', 'jukebox musical', 'backstage musical', 'music biopic', 'concert film'], genres: [10402, 18], mood: 'Music' },
+        { keywords: ['sports', 'sport', 'athlete', 'athletic', 'game', 'competition', 'championship', 'tournament', 'football', 'basketball', 'baseball', 'soccer', 'hockey', 'boxing', 'wrestling', 'racing', 'olympics', 'coach', 'underdog', 'team', 'training', 'comeback', 'rivalry', 'championship game', 'playoffs', 'world cup', 'super bowl', 'marathon', 'triathlon', 'extreme sports', 'surfing', 'skateboarding', 'snowboarding', 'skiing', 'cycling', 'tennis', 'golf', 'swimming', 'track and field', 'sports drama', 'underdog story', 'team spirit', 'victory', 'defeat'], genres: [99, 18], mood: 'Sports' },
+        { keywords: ['western', 'cowboy', 'cowboys', 'wild west', 'frontier', 'outlaw', 'sheriff', 'gunslinger', 'saloon', 'ranch', 'spaghetti western', 'bounty', 'duel', 'cattle drive', 'gold rush', 'lawman', 'desperado', 'rustler', 'homestead', 'pioneer', 'old west', 'gunfight at high noon', 'horseback', 'revolver', 'bandits'], genres: [37], mood: 'Western' },
+        { keywords: ['heartwarming', 'heartfelt', 'uplifting', 'inspiring', 'inspirational', 'feel-good', 'feel good', 'wholesome', 'sweet', 'touching', 'warm', 'cozy', 'comforting', 'happy', 'joyful', 'optimistic', 'hopeful', 'life-affirming', 'positive', 'encouraging', 'motivational', 'upbeat', 'cheerful'], genres: [10749, 35, 18, 10751], mood: 'Heartwarming' },
+        { keywords: ['dark', 'gritty', 'disturbing', 'depressing', 'bleak', 'heavy', 'intense', 'hardcore', 'violent', 'brutal', 'graphic', 'mature', 'adult themes', 'controversial', 'provocative', 'unsettling', 'nightmarish', 'harrowing', 'visceral', 'unflinching'], genres: [18, 53, 27, 80], mood: 'Dark' },
+        { keywords: ['thought-provoking', 'thought provoking', 'philosophical', 'cerebral', 'intelligent', 'smart', 'complex', 'deep', 'meaningful', 'profound', 'existential', 'metaphysical', 'contemplative', 'introspective', 'meditative', 'reflective', 'intellectually stimulating'], genres: [18, 878, 9648], mood: 'Thought-Provoking' },
+        { keywords: ['lighthearted', 'light-hearted', 'easy watching', 'easy watch', 'relaxing', 'chill', 'laid back', 'casual', 'breezy', 'carefree', 'easygoing', 'mellow', 'gentle', 'pleasant', 'uncomplicated'], genres: [35, 10749, 10751], mood: 'Lighthearted' },
+        { keywords: ['food', 'cooking', 'chef', 'restaurant', 'culinary', 'cuisine', 'baker', 'baking', 'dinner', 'meal', 'recipe', 'gastronomy', 'food truck', 'master chef', 'competition cooking', 'foodie', 'gourmet', 'culinary arts', 'kitchen', 'dishes', 'cooking show'], genres: [35, 18, 99], mood: 'Food' },
+        { keywords: ['nostalgic', 'nostalgia', 'childhood', 'memory', 'memories', 'retro', 'throwback', 'old school', 'classic', '80s', '90s', 'vintage', 'period nostalgia', 'coming of age nostalgia', 'reminiscent', 'sentimental', 'bygone days', 'good old days', 'flashback'], genres: [18, 35, 10751], mood: 'Nostalgic' },
+        { keywords: ['travel', 'traveling', 'vacation', 'trip', 'journey', 'wanderlust', 'destination', 'road trip', 'backpacking', 'adventure travel', 'cultural journey', 'world tour', 'globe-trotting', 'tourism', 'sightseeing', 'getaway', 'escape', 'exploration'], genres: [12, 99, 18], mood: 'Travel' },
+        { keywords: ['mind-bending', 'mind bending', 'trippy', 'surreal', 'surrealism', 'strange', 'weird', 'bizarre', 'psychedelic', 'abstract', 'experimental', 'unconventional', 'avant-garde', 'dreamlike', 'nonlinear', 'reality-bending', 'consciousness', 'perception', 'illusion', 'hallucinatory'], genres: [878, 9648, 53], mood: 'Mind-Bending' },
+        { keywords: ['heist', 'con', 'con artist', 'scam', 'theft', 'robbery', 'steal', 'criminal', 'mastermind', 'clever', 'caper', 'bank robbery', 'casino heist', 'art theft', 'jewel heist', 'elaborate plan', 'scheme', 'swindle', 'fraud', 'plot', 'crew', 'job', 'score', 'getaway'], genres: [80, 53, 28], mood: 'Heist' },
+        { keywords: ['friendship', 'friends', 'buddy', 'bromance', 'camaraderie', 'bond', 'bonding', 'best friends', 'platonic', 'loyalty', 'bff', 'companionship', 'fellowship', 'kinship', 'solidarity', 'allies'], genres: [35, 18, 12], mood: 'Friendship' },
+        { keywords: ['survival', 'stranded', 'isolated', 'alone', 'wilderness', 'trapped', 'lost', 'castaway', 'deserted island', 'plane crash', 'shipwreck', 'against the elements', 'survive', 'endurance', 'perseverance', 'will to live', 'fight for survival'], genres: [12, 18, 53], mood: 'Survival' },
+        { keywords: ['political', 'politics', 'government', 'election', 'power', 'corruption', 'scandal', 'conspiracy', 'white house', 'parliament', 'senator', 'president', 'campaign', 'diplomacy', 'geopolitics', 'political intrigue', 'power struggle', 'regime'], genres: [18, 53, 99], mood: 'Political' },
+        { keywords: ['nature', 'wildlife', 'environment', 'ocean', 'forest', 'animals', 'planet', 'earth', 'ecology', 'conservation', 'biodiversity', 'rainforest', 'safari', 'natural world', 'ecosystem', 'habitat', 'species', 'wilderness'], genres: [99, 12], mood: 'Nature' },
+        { keywords: ['technology', 'tech', 'computer', 'hacker', 'hacking', 'internet', 'social media', 'startup', 'silicon valley', 'programming', 'cyber', 'digital', 'innovation', 'coding', 'software', 'hardware', 'algorithm', 'data', 'network', 'online'], genres: [878, 53, 99], mood: 'Technology' },
+        { keywords: ['art', 'artist', 'painter', 'painting', 'museum', 'creativity', 'creative', 'sculpture', 'gallery', 'masterpiece', 'renaissance art', 'modern art', 'impressionism', 'artistic', 'canvas', 'exhibition', 'art world', 'abstract art'], genres: [18, 99], mood: 'Art' },
+        { keywords: ['cult', 'cult classic', 'underground', 'indie', 'independent', 'arthouse', 'art house', 'foreign', 'international', 'criterion', 'auteur', 'offbeat', 'unconventional', 'niche', 'alternative'], genres: [18, 35, 9648], mood: 'Cult' },
+        { keywords: ['top rated', 'highest rated', 'best rated', 'best films', 'best movies', 'critically acclaimed', 'award winning', 'oscar', 'academy award', 'golden globe', 'cannes', 'sundance', 'masterpiece', 'acclaimed', 'celebrated', 'lauded', 'prestigious'], genres: [18, 28, 35, 878, 53], mood: 'Top-Rated' },
+        { keywords: ['similar to', 'similar films', 'similar movies', 'recommendations like', 'movies like', 'shows like', 'like this', 'something like', 'reminds me of', 'comparable to'], genres: [], mood: 'Similar Movies', isSimilarSearch: true }
     ]
 };
 
@@ -408,24 +408,39 @@ function updateVibeButton() {
 
 function showFeedbackLoop() {
     const feedbackLoop = document.getElementById('feedback-loop');
-    if (feedbackLoop) feedbackLoop.style.display = 'block';
+    if (!feedbackLoop) return;
     
-    document.querySelectorAll('.feedback-btn').forEach(btn => {
+    feedbackLoop.style.display = 'block';
+    
+    // Remove old event listeners by cloning buttons
+    const feedbackButtons = feedbackLoop.querySelectorAll('.feedback-btn');
+    feedbackButtons.forEach(oldBtn => {
+        const newBtn = oldBtn.cloneNode(true);
+        oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+    });
+    
+    // Add fresh event listeners
+    feedbackLoop.querySelectorAll('.feedback-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const feedback = btn.dataset.feedback;
-            document.querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('selected'));
+            feedbackLoop.querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
             
             if (feedback === 'loved') {
                 triggerConfetti();
             } else if (feedback === 'nope') {
+                // Reset the selected state after a moment
+                setTimeout(() => {
+                    feedbackLoop.querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('selected'));
+                }, 300);
+                
                 setTimeout(() => {
                     const moods = Object.keys(MOOD_CONFIG);
                     selections.mood = moods[Math.floor(Math.random() * moods.length)];
                     fetchSurpriseMoviesPerPlatform();
                 }, 500);
             }
-        }, { once: true });
+        });
     });
 }
 
@@ -558,9 +573,9 @@ async function fetchContentForPlatform(platformId) {
             cachedFetch(tvUrl.toString(), { headers: { Authorization: `Bearer ${TMDB_V4_TOKEN}` } })
         ]);
 
-        // Take 1 movie + 1 TV show per platform
-        const movies = (movieData.results || []).slice(0, 1);
-        const tvShows = (tvData.results || []).slice(0, 1);
+        // Take 2 movies + 2 TV shows per platform
+        const movies = (movieData.results || []).slice(0, 2);
+        const tvShows = (tvData.results || []).slice(0, 2);
         
         const enrichedMovies = await Promise.all(movies.map(m => enrichMovieData(m)));
         const enrichedShows = await Promise.all(tvShows.map(s => enrichTVShowData(s)));
@@ -617,43 +632,61 @@ async function fetchSurpriseMoviesPerPlatform() {
     }
 }
 
-// FIXED: Surprise includes both movies AND TV shows
+// FIXED: Surprise includes both movies AND TV shows - FETCH MULTIPLE ITEMS
 async function fetchSurpriseForPlatform(platformId) {
     try {
         const finalGenreIds = MOOD_CONFIG[selections.mood].genres;
         const sortStr = MOOD_CONFIG[selections.mood].sort;
         const minVotes = MOOD_CONFIG[selections.mood].minVotes;
         
-        // Randomly choose movie or TV show
-        const contentType = Math.random() > 0.5 ? 'movie' : 'tv';
+        // Fetch both movies AND TV shows
+        const movieUrl = new URL(`${TMDB_BASE_URL}/discover/movie`);
+        movieUrl.searchParams.append("watch_region", "US");
+        movieUrl.searchParams.append("with_watch_providers", platformId);
+        movieUrl.searchParams.append("with_genres", finalGenreIds.join(","));
+        movieUrl.searchParams.append("sort_by", sortStr);
+        movieUrl.searchParams.append("vote_count.gte", minVotes);
         
-        const url = new URL(`${TMDB_BASE_URL}/discover/${contentType}`);
-        url.searchParams.append("watch_region", "US");
-        url.searchParams.append("with_watch_providers", platformId);
-        url.searchParams.append("with_genres", finalGenreIds.join(","));
-        url.searchParams.append("sort_by", sortStr);
-        url.searchParams.append("vote_count.gte", minVotes);
+        const tvUrl = new URL(`${TMDB_BASE_URL}/discover/tv`);
+        tvUrl.searchParams.append("watch_region", "US");
+        tvUrl.searchParams.append("with_watch_providers", platformId);
+        tvUrl.searchParams.append("with_genres", finalGenreIds.join(","));
+        tvUrl.searchParams.append("sort_by", sortStr);
+        tvUrl.searchParams.append("vote_count.gte", minVotes);
 
-        const data = await cachedFetch(url.toString(), { 
-            headers: { Authorization: `Bearer ${TMDB_V4_TOKEN}` } 
+        const [movieData, tvData] = await Promise.all([
+            cachedFetch(movieUrl.toString(), { headers: { Authorization: `Bearer ${TMDB_V4_TOKEN}` } }),
+            cachedFetch(tvUrl.toString(), { headers: { Authorization: `Bearer ${TMDB_V4_TOKEN}` } })
+        ]);
+
+        const movies = (movieData.results || []).slice(0, 4); // Get 4 movies
+        const tvShows = (tvData.results || []).slice(0, 4); // Get 4 TV shows
+        
+        // Combine and shuffle
+        const combined = [...movies, ...tvShows];
+        const shuffled = combined.sort(() => Math.random() - 0.5);
+        
+        // Take 5-8 random items
+        const itemsToShow = shuffled.slice(0, Math.floor(Math.random() * 4) + 5); // Random 5-8 items
+        
+        const enrichedItems = await Promise.all(
+            itemsToShow.map(item => {
+                const isMovie = item.title !== undefined;
+                return isMovie ? enrichMovieData(item) : enrichTVShowData(item);
+            })
+        );
+        
+        // Add platform info
+        enrichedItems.forEach(item => {
+            item.platformName = PLATFORM_NAMES[platformId];
+            item.platformUrl = PLATFORM_URLS[platformId];
         });
-
-        const results = data.results || [];
-        if (results.length === 0) return null;
         
-        const randomItem = results[Math.floor(Math.random() * Math.min(results.length, 20))];
-        const enriched = contentType === 'movie' ? 
-            await enrichMovieData(randomItem) : 
-            await enrichTVShowData(randomItem);
-        
-        enriched.platformName = PLATFORM_NAMES[platformId];
-        enriched.platformUrl = PLATFORM_URLS[platformId];
-        
-        return enriched;
+        return enrichedItems;
         
     } catch (e) {
         console.error(`Error fetching surprise for platform ${platformId}:`, e);
-        return null;
+        return [];
     }
 }
 
@@ -699,8 +732,19 @@ function displayMovies(movies, container) {
         return;
     }
 
+    // Remove duplicates by movie ID
+    const uniqueMovies = [];
+    const seenIds = new Set();
+    
+    movies.forEach(movie => {
+        if (!seenIds.has(movie.id)) {
+            seenIds.add(movie.id);
+            uniqueMovies.push(movie);
+        }
+    });
+
     const groups = {};
-    movies.forEach((movie) => {
+    uniqueMovies.forEach((movie) => {
         let platformKey;
         
         if (movie.platformName) {

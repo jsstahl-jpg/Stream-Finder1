@@ -909,21 +909,85 @@ main {
 }
 
 /* =========================================
-   RESULTS GRID - OPTIMIZED FOR PERFORMANCE
+   RESULTS GRID - HORIZONTAL SCROLL WITHIN SECTIONS
    ========================================= */
 .results-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    display: flex;
+    flex-wrap: nowrap;
     gap: 2rem;
-    margin-top: 1rem;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 1rem 2rem;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding: 0 calc(50% - 160px);
 }
 
-/* WATCHLIST GRID - MATCH AI PICKS SIZE */
+.results-grid .movie-card {
+    flex: 0 0 320px;
+    min-width: 320px;
+    max-width: 320px;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+}
+
+.results-grid::-webkit-scrollbar {
+    height: 8px;
+}
+
+.results-grid::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.results-grid::-webkit-scrollbar-thumb {
+    background: var(--accent-gold);
+    border-radius: 10px;
+}
+
+.results-grid::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-yellow);
+}
+
+/* WATCHLIST GRID - HORIZONTAL SCROLL WITHIN SECTIONS */
 .favorites-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    display: flex;
+    flex-wrap: nowrap;
     gap: 2rem;
-    margin-top: 1rem;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 1rem 2rem;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding: 0 calc(50% - 160px);
+}
+
+.favorites-grid .movie-card {
+    flex: 0 0 320px;
+    min-width: 320px;
+    max-width: 320px;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+}
+
+.favorites-grid::-webkit-scrollbar {
+    height: 8px;
+}
+
+.favorites-grid::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.favorites-grid::-webkit-scrollbar-thumb {
+    background: var(--accent-gold);
+    border-radius: 10px;
+}
+
+.favorites-grid::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-yellow);
 }
 
 /* =========================================
@@ -942,7 +1006,6 @@ main {
     display: flex;
     flex-direction: column;
     will-change: transform;
-    max-width: 400px;
 }
 
 .movie-card:hover:not(.expanded) {
@@ -1246,9 +1309,18 @@ main {
 /* =========================================
    GENRE SECTIONS
    ========================================= */
+#results-area,
+#favorites-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    width: 100%;
+}
+
 .genre-section {
-    margin-bottom: 3rem;
+    margin-bottom: 0;
     overflow: visible;
+    width: 100%;
 }
 
 .genre-title {
@@ -1568,14 +1640,31 @@ main {
         padding: 0.75rem !important;
     }
 
+    /* MOBILE: Center spotlight with no half cards */
     .results-grid {
-        grid-template-columns: 1fr;
         gap: 1.5rem;
+        padding: 1rem;
+        scroll-padding: 0 calc(50% - 140px);
+    }
+
+    .results-grid .movie-card {
+        flex: 0 0 280px;
+        min-width: 280px;
+        max-width: 280px;
+        scroll-snap-align: center;
     }
 
     .favorites-grid {
-        grid-template-columns: 1fr;
         gap: 1.5rem;
+        padding: 1rem;
+        scroll-padding: 0 calc(50% - 140px);
+    }
+
+    .favorites-grid .movie-card {
+        flex: 0 0 280px;
+        min-width: 280px;
+        max-width: 280px;
+        scroll-snap-align: center;
     }
 
     .movie-poster {
@@ -1628,6 +1717,27 @@ main {
 
     .step-header label {
         font-size: 1.3rem;
+    }
+
+    /* SMALL PHONES: Center spotlight with smaller cards */
+    .results-grid {
+        scroll-padding: 0 calc(50% - 130px);
+    }
+
+    .results-grid .movie-card {
+        flex: 0 0 260px;
+        min-width: 260px;
+        max-width: 260px;
+    }
+
+    .favorites-grid {
+        scroll-padding: 0 calc(50% - 130px);
+    }
+
+    .favorites-grid .movie-card {
+        flex: 0 0 260px;
+        min-width: 260px;
+        max-width: 260px;
     }
 
     .movie-poster {
