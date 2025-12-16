@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>StreamFinder | Cinematic Mode</title>
+    
+    <!-- Preconnect for faster loading -->
+    <link rel="preconnect" href="https://api.themoviedb.org">
+    <link rel="preconnect" href="https://image.tmdb.org">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    
+    <!-- Defer non-critical scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/confetti-js" defer></script>
+</head>
+
+<body>
+    <video id="bg-video" autoplay muted loop playsinline preload="none">
+        <source src="background.mp4" type="video/mp4" />
+    </video>
+    
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-brand" id="logo-home" style="cursor: pointer;" aria-label="StreamFinder Home">
+            <i class="fas fa-film"></i> StreamFinder
+        </div>
+        <button id="hamburger-btn" class="hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false"
+            aria-controls="nav-links">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
+            <button id="nav-quiz" class="nav-item active" aria-label="Find Movies Quiz" aria-selected="true">
+                <i class="fas fa-magic"></i> Find Movies
+            </button>
+            <button id="nav-ai" class="nav-item" aria-label="AI Movie Recommender" aria-selected="false">
+                <i class="fas fa-robot"></i> AI Picks
+            </button>
+            <button id="nav-favorites" class="nav-item" aria-label="My Watchlist" aria-selected="false">
+                <i class="fas fa-heart"></i> My Watchlist
+                <span id="fav-count" aria-label="Number of items in watchlist">0</span>
+            </button>
+        </div>
+    </nav>
+    
+    <div id="movie-fact" class="movie-fact">
+        <div class="fact-content">
+            <i class="fas fa-star"></i>
+            <p id="fact-text">Loading cinema fact...</p>
+            <i class="fas fa-star"></i>
+        </div>
+    </div>
+    
+    <main>
+        <div id="view-quiz" class="view-container active" role="region" aria-label="Movie Recommendation Quiz">
+            <form id="quiz-form" aria-label="Quiz form to find movie recommendations">
+                <div class="quiz-step active" id="step-0" role="group" aria-labelledby="step-0">
+                    <div class="step-content text-center">
+                        <h1>Welcome to the Cinema</h1>
+                        <p class="tagline">Let's find the perfect movie for your mood.</p>
+                        <div class="start-actions">
+                            <button type="button" class="action-btn primary-btn next-btn"
+                                aria-label="Start the movie recommendation quiz">Get Started</button>
+                            <button type="button" id="surprise-btn" class="action-btn secondary-btn"
+                                aria-label="Get a random movie surprise">
+                                <i class="fas fa-magic"></i> Surprise Me
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quiz-step" id="step-1" role="group" aria-labelledby="step-1">
+                    <div class="step-header">
+                        <h2>Question 1/4</h2>
+                        <label>How are you feeling right now?</label>
+                    </div>
+                    <div class="grid-options" id="mood-buttons" role="group" aria-label="Select your mood">
+                        <button type="button" class="option-card" data-value="cozy" aria-label="Cozy mood"><i
+                                class="fas fa-mug-hot"></i><span>Cozy</span></button>
+                        <button type="button" class="option-card" data-value="excited" aria-label="Excited mood"><i
+                                class="fas fa-bolt"></i><span>Excited</span></button>
+                        <button type="button" class="option-card" data-value="sad" aria-label="Sad mood"><i
+                                class="fas fa-cloud-rain"></i><span>Sad</span></button>
+                        <button type="button" class="option-card" data-value="tired" aria-label="Tired mood"><i
+                                class="fas fa-bed"></i><span>Tired</span></button>
+                        <button type="button" class="option-card" data-value="curious" aria-label="Curious mood"><i
+                                class="fas fa-search"></i><span>Curious</span></button>
+                    </div>
+                    <div class="step-nav">
+                        <button type="button" class="nav-btn back-btn" data-target="0"
+                            aria-label="Go back to previous question">Back</button>
+                        <button type="button" class="nav-btn next-btn" disabled
+                            aria-label="Continue to next question">Next</button>
+                    </div>
+                </div>
+                
+                <div class="quiz-step" id="step-2" role="group" aria-labelledby="step-2">
+                    <div class="step-header">
+                        <h2>Question 2/4</h2>
+                        <label>How much time do you have?</label>
+                    </div>
+                    <div class="grid-options" id="time-buttons" role="group" aria-label="Select available viewing time">
+                        <button type="button" class="option-card" data-value="short"
+                            aria-label="Less than 30 minutes"><i class="fas fa-hourglass-start"></i><span>&lt; 30
+                                min</span></button>
+                        <button type="button" class="option-card" data-value="medium" aria-label="30 to 60 minutes"><i
+                                class="fas fa-hourglass-half"></i><span>30–60 min</span></button>
+                        <button type="button" class="option-card" data-value="long" aria-label="Full movie length"><i
+                                class="fas fa-hourglass-end"></i><span>Movie-length</span></button>
+                        <button type="button" class="option-card" data-value="binge" aria-label="All day binging"><i
+                                class="fas fa-infinity"></i><span>I'm Binging</span></button>
+                    </div>
+                    <div class="step-nav">
+                        <button type="button" class="nav-btn back-btn" data-target="1"
+                            aria-label="Go back to previous question">Back</button>
+                        <button type="button" class="nav-btn next-btn" disabled
+                            aria-label="Continue to next question">Next</button>
+                    </div>
+                </div>
+                
+                <div class="quiz-step" id="step-3" role="group" aria-labelledby="step-3">
+                    <div class="step-header">
+                        <h2>Question 3/4</h2>
+                        <label>Pick your genre vibe(s)</label>
+                    </div>
+                    <div class="grid-options" id="genre-buttons" role="group" aria-label="Select one or more genres">
+                        <button type="button" class="option-card" data-genre-id="35"
+                            aria-label="Comedy genre">Comedy</button>
+                        <button type="button" class="option-card" data-genre-id="10749"
+                            aria-label="Romance genre">Romance</button>
+                        <button type="button" class="option-card" data-genre-id="27"
+                            aria-label="Horror genre">Horror</button>
+                        <button type="button" class="option-card" data-genre-id="18"
+                            aria-label="Drama genre">Drama</button>
+                        <button type="button" class="option-card" data-genre-id="878"
+                            aria-label="Science Fiction genre">Sci-Fi</button>
+                        <button type="button" class="option-card" data-genre-id="99"
+                            aria-label="Documentary genre">Documentary</button>
+                    </div>
+                    <div class="step-nav right-aligned">
+                        <button type="button" class="nav-btn back-btn" data-target="2"
+                            aria-label="Go back to previous question">Back</button>
+                        <button type="button" class="nav-btn next-btn"
+                            aria-label="Continue to streaming services selection">Next</button>
+                    </div>
+                </div>
+                
+                <div class="quiz-step" id="step-4" role="group" aria-labelledby="step-4">
+                    <div class="step-header">
+                        <h2>Final Question</h2>
+                        <label>Select your streaming services</label>
+                    </div>
+
+                    <div class="select-all-container">
+                        <button type="button" id="select-all-platforms" class="secondary-btn"
+                            aria-label="Select all streaming platforms">
+                            <i class="fas fa-check-double"></i> Select All
+                        </button>
+                    </div>
+
+                    <div class="grid-options" id="platforms-container" role="group"
+                        aria-label="Select your available streaming services">
+                        <label class="option-card platform-card">
+                            <input type="checkbox" name="platform" value="8" aria-label="Netflix">
+                            <span>Netflix</span>
+                        </label>
+                        <label class="option-card platform-card">
+                            <input type="checkbox" name="platform" value="15" aria-label="Hulu">
+                            <span>Hulu</span>
+                        </label>
+                        <label class="option-card platform-card">
+                            <input type="checkbox" name="platform" value="1899" aria-label="Max">
+                            <span>Max</span>
+                        </label>
+                        <label class="option-card platform-card">
+                            <input type="checkbox" name="platform" value="337" aria-label="Disney Plus">
+                            <span>Disney+</span>
+                        </label>
+                        <label class="option-card platform-card">
+                            <input type="checkbox" name="platform" value="9" aria-label="Prime Video">
+                            <span>Prime Video</span>
+                        </label>
+                        <label class="option-card platform-card">
+                            <input type="checkbox" name="platform" value="531" aria-label="Paramount Plus">
+                            <span>Paramount+</span>
+                        </label>
+                        <label class="option-card platform-card">
+                            <input type="checkbox" name="platform" value="384" aria-label="MGM Plus">
+                            <span>MGM+</span>
+                        </label>
+                        <label class="option-card platform-card">
+                            <input type="checkbox" name="platform" value="257" aria-label="Fubo TV">
+                            <span>Fubo TV</span>
+                        </label>
+                        <label class="option-card platform-card">
+                            <input type="checkbox" name="platform" value="350" aria-label="Apple TV Plus">
+                            <span>Apple TV+</span>
+                        </label>
+                        <label class="option-card platform-card">
+                            <input type="checkbox" name="platform" value="386" aria-label="Peacock">
+                            <span>Peacock</span>
+                        </label>
+                        <label class="option-card platform-card">
+                            <input type="checkbox" name="platform" value="1796" aria-label="Crunchyroll">
+                            <span>Crunchyroll</span>
+                        </label>
+                    </div>
+
+                    <div class="step-nav">
+                        <button type="button" class="nav-btn back-btn" data-target="3"
+                            aria-label="Go back to previous question">Back</button>
+                        <button type="submit" class="action-btn primary-btn" id="reveal-btn"
+                            aria-label="Submit quiz and reveal movie recommendations">Reveal Picks</button>
+                    </div>
+                </div>
+                
+                <div class="quiz-step" id="step-5" role="region" aria-label="Movie recommendations results">
+                    <div class="favorites-header">
+                        <h1 id="results-main-title">Your Perfect Picks</h1>
+                        <p id="results-subtitle">Discover your next favorite film based on your mood.</p>
+                        <div class="sort-controls watchlist-sort">
+                            <label for="sort-by-platform">Sort by platform:</label>
+                            <select id="sort-by-platform" class="sort-select"></select>
+                        </div>
+                    </div>
+
+                    <div class="vibe-selector" id="vibe-selector" style="display: none;">
+                        <p class="vibe-announcement">Your vibe today: <span class="vibe-text" id="vibe-text"></span></p>
+                        
+                        <div id="feedback-loop" class="feedback-loop" style="display: none;">
+                            <p>Was this vibe right for you?</p>
+                            <div class="feedback-buttons">
+                                <button type="button" class="feedback-btn" data-feedback="loved" title="Nailed it">😍 Nailed it</button>
+                                <button type="button" class="feedback-btn" data-feedback="nope" title="Try again">😤 Nope! Try again</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="loading-bar-container" class="loading-bar-container" style="display: none;">
+                        <div class="loading-bar">
+                            <div class="loading-progress"></div>
+                        </div>
+                        <p class="loading-text">Finding your perfect match...</p>
+                    </div>
+
+                    <div id="results-area" class="results-grid" role="grid" aria-label="List of recommended movies">
+                    </div>
+
+                    <button type="button" id="back-to-top-btn" class="back-to-top-btn"
+                        aria-label="Scroll back to top of results" style="display: none;">
+                        <i class="fas fa-chevron-up"></i> Back to Top
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div id="view-ai" class="view-container" role="region" aria-label="AI Movie Recommender">
+            <div class="ai-chat-container">
+                <div class="ai-header">
+                    <i class="fas fa-robot"></i>
+                    <h1>AI Movie Recommender</h1>
+                    <p>Tell me what you're in the mood for, and I'll find the perfect movie!</p>
+                </div>
+                <div id="ai-chat-messages" class="ai-messages" role="log" aria-label="Chat conversation history"
+                    aria-live="polite"></div>
+                <div class="ai-input-container">
+                    <textarea id="ai-input" placeholder="e.g., I'm feeling nostalgic and want something heartwarming..."
+                        rows="3" aria-label="Enter your movie preference"></textarea>
+                    <button id="ai-send-btn" class="action-btn primary-btn"
+                        aria-label="Send message and get AI recommendations">
+                        <i class="fas fa-paper-plane"></i> Get Recommendations
+                    </button>
+                </div>
+                <div id="ai-results" class="ai-results-grid" role="grid" aria-label="AI recommended movies"></div>
+            </div>
+        </div>
+        
+        <div id="view-favorites" class="view-container" role="region" aria-label="My Watchlist">
+            <div class="favorites-header">
+                <h1>My Watchlist</h1>
+                <p>Movies and Shows saved for later.</p>
+                <div class="sort-controls watchlist-sort">
+                    <label for="watchlist-sort-platform">Sort by platform:</label>
+                    <select id="watchlist-sort-platform" class="sort-select"></select>
+                </div>
+            </div>
+            <div id="favorites-container" role="grid" aria-label="Watchlist items"></div>
+            <button type="button" id="back-to-top-btn-fav" class="back-to-top-btn"
+                aria-label="Scroll back to top of watchlist" style="display: none;">
+                <i class="fas fa-chevron-up"></i> Back to Top
+            </button>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <p>&copy; 2025 Created by <a href="https://www.linkedin.com/in/camille-marquez-m-s-76a9391b3/"
+                target="_blank" rel="noopener">Camille Marquez</a> and <a href="https://www.linkedin.com/in/jordanstahl/"
+                target="_blank" rel="noopener">Jordan Stahl</a></p>
+    </footer>
+    
+    <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;"></canvas>
+    
+    <div id="imdb-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <i class="fas fa-info-circle modal-icon"></i>
+            <h3>IMDb Page Not Available</h3>
+            <p>Sorry, this actor's IMDb page is not currently available.</p>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+
+</html>
