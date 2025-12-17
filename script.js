@@ -2,11 +2,60 @@
 // STREAMFINDER - COMPLETE WITH TV SHOWS
 // ========================================
 
+// FORCE SCROLL TO TOP IMMEDIATELY ON SCRIPT LOAD
+window.scrollTo(0, 0);
+document.documentElement.scrollTop = 0;
+if (document.body) document.body.scrollTop = 0;
+
 const TMDB_V4_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxOWQ3ZGFjM2QyZDI4OGFiMDFiMTliMDA1YWQzMjIxNCIsIm5iZiI6MTc2MzA4MjI4Mi4wOTYsInN1YiI6IjY5MTY4MDJhMzEzN2M3ZGFmMTg3NjVhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.mNnYHf28DA9OqlRm8Vc6tsVs96b9YrA6eJlnWJbtuXY";
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w342";
 
 let userSelectedPlatforms = [];
+
+// TMDB Keyword IDs for precise filtering based on quiz answers
+const TMDB_KEYWORDS = {
+    // Mood-based keywords
+    cozy: [9715, 10183, 180547, 10629], // feel-good, light-hearted, uplifting, comfort
+    excited: [818, 1701, 6972, 10364], // adrenaline, high-stakes, intense, explosive
+    sad: [3205, 9672, 158718, 162846], // emotional, tear-jerker, tragic, heartbreaking
+    tired: [9823, 10103, 10629], // easy-watching, relaxing, comfort
+    curious: [9951, 10683, 4344], // mystery, investigation, puzzle
+    
+    // Subgenre keywords
+    superhero: [9715, 180547], // superhero, comic-book
+    heist: [10336, 3801], // heist, robbery
+    zombie: [12339], // zombie
+    vampire: [3800], // vampire
+    timeTravel: [4379], // time-travel
+    psychological: [9685], // psychological
+    dark: [9912, 10683], // dark, gritty
+    political: [4344, 9951], // political, conspiracy
+    musical: [10683], // musical
+    sports: [6054], // sports
+    space: [9951, 14909], // space, sci-fi
+    dystopian: [4565, 190370], // dystopia, post-apocalyptic
+    comingOfAge: [2756], // coming-of-age
+    revenge: [1495], // revenge
+    underdog: [9840], // underdog
+    
+    // Vibe keywords
+    funny: [9840, 931], // comedy, humor
+    romantic: [9840, 10183], // romance, love
+    scary: [10224, 12339], // horror, supernatural
+    inspiring: [4344, 10683], // inspirational, triumph
+    
+    // Setting/Theme keywords
+    smallTown: [10683], // small-town
+    bigCity: [9951], // urban, city
+    school: [1416], // school, college
+    hospital: [5202], // hospital, medical
+    
+    // Time period
+    modern: [9951], // contemporary
+    period: [10683, 4344], // historical, period-piece
+    futuristic: [14909, 9951] // future, sci-fi
+};
 
 // ========================================
 // ENHANCED AI KEYWORDS - 500+ Keywords
@@ -51,11 +100,21 @@ const CHATBOT_RULES = {
 };
 
 const MOOD_CONFIG = {
-    cozy: { genres: [35, 10749, 18], sort: "popularity.desc", minVotes: 50 },
-    excited: { genres: [28, 53, 878], sort: "popularity.desc", minVotes: 50 },
-    sad: { genres: [18, 10752, 27], sort: "vote_average.desc", minVotes: 100 },
-    tired: { genres: [35, 10751, 18], sort: "popularity.desc", minVotes: 50 },
-    curious: { genres: [99, 9648, 878, 36, 14], sort: "popularity.desc", minVotes: 30 }
+    cozy: { genres: [35, 10749, 18], sort: "popularity.desc", minVotes: 30 },
+    excited: { genres: [28, 53, 878], sort: "popularity.desc", minVotes: 30 },
+    sad: { genres: [18, 10749, 10751, 10752], sort: "popularity.desc", minVotes: 20 },
+    tired: { genres: [35, 10751, 18], sort: "popularity.desc", minVotes: 30 },
+    curious: { genres: [99, 9648, 878, 36, 14], sort: "popularity.desc", minVotes: 20 },
+    adventurous: { genres: [12, 28, 14], sort: "popularity.desc", minVotes: 30 },
+    romantic: { genres: [10749, 35, 18], sort: "vote_average.desc", minVotes: 40 },
+    scared: { genres: [27, 53, 9648], sort: "popularity.desc", minVotes: 30 },
+    nostalgic: { genres: [18, 10751, 35], sort: "popularity.desc", minVotes: 30 },
+    inspired: { genres: [18, 99, 36], sort: "vote_average.desc", minVotes: 40 },
+    playful: { genres: [16, 10751, 35], sort: "popularity.desc", minVotes: 30 },
+    thoughtful: { genres: [18, 878, 9648], sort: "vote_average.desc", minVotes: 40 },
+    chill: { genres: [35, 10402, 99], sort: "popularity.desc", minVotes: 20 },
+    intense: { genres: [53, 80, 18], sort: "vote_average.desc", minVotes: 40 },
+    escapist: { genres: [14, 878, 12], sort: "popularity.desc", minVotes: 30 }
 };
 
 const RUNTIME_CONFIG = {
@@ -436,7 +495,15 @@ function showFeedbackLoop() {
                 
                 setTimeout(() => {
                     const moods = Object.keys(MOOD_CONFIG);
-                    selections.mood = moods[Math.floor(Math.random() * moods.length)];
+                    const currentMood = selections.mood;
+                    
+                    // Pick a DIFFERENT mood than current
+                    let newMood;
+                    do {
+                        newMood = moods[Math.floor(Math.random() * moods.length)];
+                    } while (newMood === currentMood && moods.length > 1);
+                    
+                    selections.mood = newMood;
                     fetchSurpriseMoviesPerPlatform();
                 }, 500);
             }
@@ -521,7 +588,7 @@ async function fetchMoviesFromEachPlatform() {
     }
 }
 
-// FIXED: Fetch both movies AND TV shows for each platform
+// ENHANCED: Fetch both movies AND TV shows with keyword filtering
 async function fetchContentForPlatform(platformId) {
     try {
         let finalGenreIds = [];
@@ -537,6 +604,10 @@ async function fetchContentForPlatform(platformId) {
         const minVotes = selections.mood && MOOD_CONFIG[selections.mood] ? 
             MOOD_CONFIG[selections.mood].minVotes : 50;
 
+        // Get keywords based on mood for more precise filtering
+        const keywords = selections.mood && TMDB_KEYWORDS[selections.mood] ? 
+            TMDB_KEYWORDS[selections.mood] : null;
+
         // Fetch Movies
         const movieUrl = new URL(`${TMDB_BASE_URL}/discover/movie`);
         movieUrl.searchParams.append("watch_region", "US");
@@ -544,6 +615,11 @@ async function fetchContentForPlatform(platformId) {
         
         if (finalGenreIds.length) {
             movieUrl.searchParams.append("with_genres", finalGenreIds.join(","));
+        }
+        
+        // Add keyword filtering for more precise results
+        if (keywords && keywords.length > 0) {
+            movieUrl.searchParams.append("with_keywords", keywords.join("|")); // OR logic
         }
         
         movieUrl.searchParams.append("sort_by", sortStr);
@@ -555,13 +631,18 @@ async function fetchContentForPlatform(platformId) {
             if (rt.lte) movieUrl.searchParams.append("with_runtime.lte", rt.lte);
         }
 
-        // Fetch TV Shows - FIXED: Only fetch from user-selected platforms
+        // Fetch TV Shows with keyword filtering
         const tvUrl = new URL(`${TMDB_BASE_URL}/discover/tv`);
         tvUrl.searchParams.append("watch_region", "US");
         tvUrl.searchParams.append("with_watch_providers", platformId);
         
         if (finalGenreIds.length) {
             tvUrl.searchParams.append("with_genres", finalGenreIds.join(","));
+        }
+        
+        // Add keyword filtering for TV shows
+        if (keywords && keywords.length > 0) {
+            tvUrl.searchParams.append("with_keywords", keywords.join("|")); // OR logic
         }
         
         tvUrl.searchParams.append("sort_by", sortStr);
@@ -573,9 +654,9 @@ async function fetchContentForPlatform(platformId) {
             cachedFetch(tvUrl.toString(), { headers: { Authorization: `Bearer ${TMDB_V4_TOKEN}` } })
         ]);
 
-        // Take 2 movies + 2 TV shows per platform
-        const movies = (movieData.results || []).slice(0, 2);
-        const tvShows = (tvData.results || []).slice(0, 2);
+        // Take 3 movies + 3 TV shows per platform for more variety with keyword filtering
+        const movies = (movieData.results || []).slice(0, 3);
+        const tvShows = (tvData.results || []).slice(0, 3);
         
         const enrichedMovies = await Promise.all(movies.map(m => enrichMovieData(m)));
         const enrichedShows = await Promise.all(tvShows.map(s => enrichTVShowData(s)));
@@ -607,17 +688,39 @@ async function fetchSurpriseMoviesPerPlatform() {
     try {
         const allPlatformIds = Object.keys(PLATFORM_NAMES);
         
-        const platformContent = await Promise.all(
-            allPlatformIds.map(platformId => fetchSurpriseForPlatform(platformId))
-        );
+        let allContent = [];
+        let retryCount = 0;
+        const maxRetries = 3;
+        
+        // Retry with different moods if no content found
+        while (allContent.length === 0 && retryCount < maxRetries) {
+            const platformContent = await Promise.all(
+                allPlatformIds.map(platformId => fetchSurpriseForPlatform(platformId))
+            );
 
-        const allContent = platformContent.flat().filter(Boolean);
+            allContent = platformContent.flat().filter(Boolean);
+            
+            if (allContent.length === 0 && retryCount < maxRetries - 1) {
+                // Try a different mood
+                const moods = Object.keys(MOOD_CONFIG);
+                const currentMood = selections.mood;
+                let newMood;
+                do {
+                    newMood = moods[Math.floor(Math.random() * moods.length)];
+                } while (newMood === currentMood && moods.length > 1);
+                
+                selections.mood = newMood;
+                retryCount++;
+            } else {
+                break;
+            }
+        }
         
         // Hide loading bar
         hideLoadingBar();
         
         if (allContent.length === 0) {
-            container.innerHTML = '<div class="empty-state">No surprises available.</div>';
+            container.innerHTML = '<div class="empty-state">No surprises available. Please try a different vibe!</div>';
             return;
         }
 
@@ -632,12 +735,15 @@ async function fetchSurpriseMoviesPerPlatform() {
     }
 }
 
-// FIXED: Surprise includes both movies AND TV shows - FETCH MULTIPLE ITEMS
+// ENHANCED: Surprise includes keywords for precise mood matching
 async function fetchSurpriseForPlatform(platformId) {
     try {
         const finalGenreIds = MOOD_CONFIG[selections.mood].genres;
         const sortStr = MOOD_CONFIG[selections.mood].sort;
         const minVotes = MOOD_CONFIG[selections.mood].minVotes;
+        
+        // Get keywords for this mood
+        const keywords = TMDB_KEYWORDS[selections.mood] || null;
         
         // Fetch both movies AND TV shows
         const movieUrl = new URL(`${TMDB_BASE_URL}/discover/movie`);
@@ -647,12 +753,22 @@ async function fetchSurpriseForPlatform(platformId) {
         movieUrl.searchParams.append("sort_by", sortStr);
         movieUrl.searchParams.append("vote_count.gte", minVotes);
         
+        // Add keyword filtering for more precise mood matching
+        if (keywords && keywords.length > 0) {
+            movieUrl.searchParams.append("with_keywords", keywords.join("|"));
+        }
+        
         const tvUrl = new URL(`${TMDB_BASE_URL}/discover/tv`);
         tvUrl.searchParams.append("watch_region", "US");
         tvUrl.searchParams.append("with_watch_providers", platformId);
         tvUrl.searchParams.append("with_genres", finalGenreIds.join(","));
         tvUrl.searchParams.append("sort_by", sortStr);
         tvUrl.searchParams.append("vote_count.gte", minVotes);
+        
+        // Add keyword filtering for TV shows
+        if (keywords && keywords.length > 0) {
+            tvUrl.searchParams.append("with_keywords", keywords.join("|"));
+        }
 
         const [movieData, tvData] = await Promise.all([
             cachedFetch(movieUrl.toString(), { headers: { Authorization: `Bearer ${TMDB_V4_TOKEN}` } }),
@@ -669,12 +785,20 @@ async function fetchSurpriseForPlatform(platformId) {
         // Take 5-8 random items
         const itemsToShow = shuffled.slice(0, Math.floor(Math.random() * 4) + 5); // Random 5-8 items
         
-        const enrichedItems = await Promise.all(
-            itemsToShow.map(item => {
-                const isMovie = item.title !== undefined;
-                return isMovie ? enrichMovieData(item) : enrichTVShowData(item);
-            })
-        );
+        // Batch process in groups of 5 for faster loading
+        const batchSize = 5;
+        const enrichedItems = [];
+        
+        for (let i = 0; i < itemsToShow.length; i += batchSize) {
+            const batch = itemsToShow.slice(i, i + batchSize);
+            const batchResults = await Promise.all(
+                batch.map(item => {
+                    const isMovie = item.title !== undefined;
+                    return isMovie ? enrichMovieData(item) : enrichTVShowData(item);
+                })
+            );
+            enrichedItems.push(...batchResults);
+        }
         
         // Add platform info
         enrichedItems.forEach(item => {
@@ -780,6 +904,7 @@ async function enrichMovieData(movie) {
     if (!movie) return movie;
     
     try {
+        // Parallel fetch all needed data - removed individual actor IMDb lookups for speed
         const [creditsData, externalIdsData, providersData] = await Promise.all([
             cachedFetch(`${TMDB_BASE_URL}/movie/${movie.id}/credits`, { 
                 headers: { Authorization: `Bearer ${TMDB_V4_TOKEN}` } 
@@ -794,16 +919,8 @@ async function enrichMovieData(movie) {
 
         movie.cast = creditsData.cast ? creditsData.cast.slice(0, 5) : [];
 
-        const actorPromises = movie.cast.map(actor => 
-            cachedFetch(`${TMDB_BASE_URL}/person/${actor.id}/external_ids`, { 
-                headers: { Authorization: `Bearer ${TMDB_V4_TOKEN}` } 
-            }).then(data => {
-                actor.imdb_id = data.imdb_id;
-                return actor;
-            }).catch(() => actor)
-        );
-        
-        await Promise.all(actorPromises);
+        // Skip individual actor IMDb lookups for faster loading
+        // Actor names are still shown, just without IMDb links
 
         const usProviders = providersData?.results?.US?.flatrate || [];
         movie.providers = usProviders.map(p => {
@@ -838,16 +955,8 @@ async function enrichTVShowData(show) {
 
         show.cast = creditsData.cast ? creditsData.cast.slice(0, 5) : [];
 
-        const actorPromises = show.cast.map(actor => 
-            cachedFetch(`${TMDB_BASE_URL}/person/${actor.id}/external_ids`, { 
-                headers: { Authorization: `Bearer ${TMDB_V4_TOKEN}` } 
-            }).then(data => {
-                actor.imdb_id = data.imdb_id;
-                return actor;
-            }).catch(() => actor)
-        );
-        
-        await Promise.all(actorPromises);
+        // Skip individual actor IMDb lookups for faster loading
+        // Actor names are still shown, just without IMDb links
 
         const usProviders = providersData?.results?.US?.flatrate || [];
         show.providers = usProviders.map(p => {
@@ -875,12 +984,14 @@ const aiResults = document.getElementById('ai-results');
 function detectMoodFromUserInput(userMessage) {
     const lowerMessage = userMessage.toLowerCase();
 
-    const tvKeywords = ['tv show', 'tv series', 'series', 'show', 'binge', 'episodes', 'season'];
-    const movieKeywords = ['movie', 'film', 'watch a film'];
+    // Check longer phrases first to avoid false positives
+    const tvKeywords = ['tv show', 'tv series', 'shows', 'series', 'binge', 'episodes', 'seasons', 'season', 'show'];
+    const movieKeywords = ['movies', 'movie', 'films', 'film', 'watch a film'];
 
     let contentType = 'movie';
     let isShowRequest = false;
 
+    // Check TV keywords first
     for (const keyword of tvKeywords) {
         if (lowerMessage.includes(keyword)) {
             contentType = 'tv';
@@ -889,11 +1000,14 @@ function detectMoodFromUserInput(userMessage) {
         }
     }
 
-    for (const keyword of movieKeywords) {
-        if (lowerMessage.includes(keyword)) {
-            contentType = 'movie';
-            isShowRequest = false;
-            break;
+    // Only check movie keywords if not already identified as TV
+    if (!isShowRequest) {
+        for (const keyword of movieKeywords) {
+            if (lowerMessage.includes(keyword)) {
+                contentType = 'movie';
+                isShowRequest = false;
+                break;
+            }
         }
     }
 
@@ -1038,6 +1152,9 @@ async function searchMoviesByRules(genreIds, mood) {
         if (mood === 'Top-Rated') {
             url.searchParams.append('sort_by', 'vote_average.desc');
             url.searchParams.append('vote_count.gte', '200');
+        } else if (mood === 'Horror') {
+            url.searchParams.append('sort_by', 'popularity.desc');
+            url.searchParams.append('vote_count.gte', '30');
         } else {
             url.searchParams.append('sort_by', 'popularity.desc');
             url.searchParams.append('vote_count.gte', '50');
@@ -1055,7 +1172,8 @@ async function searchMoviesByRules(genreIds, mood) {
             return;
         }
 
-        const topMovies = data.results.slice(0, 5);
+        // Increase from 5 to 15-20 movies like Surprise Me
+        const topMovies = data.results.slice(0, 20);
         const enrichedMovies = await Promise.all(topMovies.map(movie => enrichMovieData(movie)));
 
         aiResultsCache = enrichedMovies;
@@ -1089,6 +1207,9 @@ async function searchTVShowsByRules(genreIds, mood) {
         if (mood === 'Top-Rated') {
             url.searchParams.append('sort_by', 'vote_average.desc');
             url.searchParams.append('vote_count.gte', '200');
+        } else if (mood === 'Horror') {
+            url.searchParams.append('sort_by', 'popularity.desc');
+            url.searchParams.append('vote_count.gte', '30');
         } else {
             url.searchParams.append('sort_by', 'popularity.desc');
             url.searchParams.append('vote_count.gte', '50');
@@ -1106,7 +1227,8 @@ async function searchTVShowsByRules(genreIds, mood) {
             return;
         }
 
-        const topShows = data.results.slice(0, 5);
+        // Increase from 5 to 20 TV shows like Surprise Me
+        const topShows = data.results.slice(0, 20);
         const enrichedShows = await Promise.all(topShows.map(show => enrichTVShowData(show)));
 
         aiResultsCache = enrichedShows;
@@ -1136,13 +1258,26 @@ async function searchByKeywords(keywords, isShowRequest = false) {
             return;
         }
 
-        const topResults = searchData.results.slice(0, 5);
+        // Enrich results to get streaming platform info
         const enrichedResults = await Promise.all(
-            topResults.map(item => isShowRequest ? enrichTVShowData(item) : enrichMovieData(item))
+            searchData.results.slice(0, 20).map(item => isShowRequest ? enrichTVShowData(item) : enrichMovieData(item))
         );
+        
+        // Filter to only include content available on streaming platforms
+        const streamingOnly = enrichedResults.filter(item => {
+            // Check if has providers (streaming platforms)
+            return item.providers && item.providers.length > 0;
+        });
+        
+        if (streamingOnly.length === 0) {
+            aiResults.innerHTML = `<p style="color: var(--text-muted); text-align: center;">No ${isShowRequest ? 'shows' : 'movies'} found on streaming platforms for "${keywords}". Try different keywords!</p>`;
+            return;
+        }
 
-        aiResultsCache = enrichedResults;
-        displayChatbotMovieResults(enrichedResults, `Results for "${keywords}"`, isShowRequest);
+        // Take first 15 streaming results
+        const finalResults = streamingOnly.slice(0, 15);
+        aiResultsCache = finalResults;
+        displayChatbotMovieResults(finalResults, `Results for "${keywords}"`, isShowRequest);
 
     } catch (error) {
         console.error('Error searching by keywords:', error);
@@ -1242,11 +1377,8 @@ function createUnifiedMovieCard(movie) {
              <div class="cast-title">Starring</div>
              <div class="cast-list">
                ${movie.cast.map(actor => {
-                   if (actor.imdb_id) {
-                       return `<a href="https://www.imdb.com/name/${actor.imdb_id}/" target="_blank" rel="noopener" class="cast-member" onclick="event.stopPropagation()">${actor.name}</a>`;
-                   } else {
-                       return `<span class="cast-member no-imdb" data-actor-name="${actor.name}">${actor.name}</span>`;
-                   }
+                   // Use TMDB actor page instead since we removed IMDb lookups for speed
+                   return `<a href="https://www.themoviedb.org/person/${actor.id}" target="_blank" rel="noopener" class="cast-member" onclick="event.stopPropagation()" title="View ${actor.name} on TMDB">${actor.name}</a>`;
                }).join('')}
              </div>
            </div>`
@@ -1537,8 +1669,45 @@ if (backToTopBtnFav) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Force scroll to top IMMEDIATELY
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
     initializeMovieFact();
     initializeSelectAllButton();
+    
+    // Lazy load background video for better performance
+    const bgVideo = document.getElementById('bg-video');
+    if (bgVideo) {
+        bgVideo.addEventListener('loadeddata', () => {
+            bgVideo.classList.add('loaded');
+        });
+        
+        // Start loading video after a short delay to prioritize page content
+        setTimeout(() => {
+            bgVideo.load();
+        }, 100);
+    }
+    
+    // Force scroll to top again after a tiny delay to override any other scripts
+    setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    }, 10);
+    
+    setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    }, 50);
+    
+    setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    }, 100);
 });
 
 pushHistory(0);

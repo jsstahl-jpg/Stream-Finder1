@@ -26,9 +26,17 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    scroll-padding-top: 0 !important;
 }
 
-/* PERFORMANCE: GPU acceleration */
+/* Ensure page always loads at top */
+html, body {
+    scroll-behavior: smooth;
+    position: relative;
+}
+
+/* PERFORMANCE: GPU acceleration with lazy loading */
 #bg-video {
     position: fixed;
     inset: 0;
@@ -39,6 +47,12 @@ html {
     filter: brightness(0.4) saturate(1.1);
     pointer-events: none;
     will-change: transform;
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+
+#bg-video.loaded {
+    opacity: 1;
 }
 
 body::before {
@@ -60,6 +74,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 /* =========================================
@@ -917,7 +932,8 @@ main {
     gap: 2rem;
     overflow-x: auto;
     overflow-y: visible;
-    padding: 1rem 2rem;
+    padding: 0.5rem 2rem;
+    padding-bottom: 1rem;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
@@ -957,7 +973,8 @@ main {
     gap: 2rem;
     overflow-x: auto;
     overflow-y: visible;
-    padding: 1rem 2rem;
+    padding: 0.5rem 2rem;
+    padding-bottom: 1rem;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
@@ -1313,7 +1330,7 @@ main {
 #favorites-container {
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 2rem;
     width: 100%;
 }
 
@@ -1328,7 +1345,8 @@ main {
     color: var(--accent-yellow);
     border-bottom: 2px solid var(--border);
     padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
+    margin-top: 0;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -1751,14 +1769,40 @@ main {
 
     .nav-btn {
         width: 100%;
+        padding: 0.9rem 1rem;
+        font-size: 1rem;
+        text-align: center;
+        white-space: normal;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .start-actions {
         width: 100%;
+        padding: 0 1rem;
     }
 
-    .action-btn {
+    .action-btn,
+    .primary-btn,
+    .secondary-btn {
         width: 100%;
+        max-width: 100%;
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        text-align: center;
+        white-space: normal;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        word-wrap: break-word;
+    }
+    
+    #ai-send-btn {
+        width: 100%;
+        max-width: 100%;
     }
 }
 

@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="theme-color" content="#200505">
     <title>StreamFinder | Cinematic Mode</title>
     
     <!-- Preconnect for faster loading -->
@@ -16,10 +17,36 @@
     
     <!-- Defer non-critical scripts -->
     <script src="https://cdn.jsdelivr.net/npm/confetti-js" defer></script>
+    
+    <!-- Ensure page always loads at top -->
+    <script>
+        // Execute immediately before page renders
+        if (history.scrollRestoration) {
+            history.scrollRestoration = 'manual';
+        }
+        
+        // Force scroll to top immediately
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        
+        window.addEventListener('beforeunload', function() {
+            window.scrollTo(0, 0);
+        });
+        
+        // Force again on load
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+            }, 0);
+        });
+    </script>
 </head>
 
-<body>
-    <video id="bg-video" autoplay muted loop playsinline preload="none">
+<body onload="window.scrollTo(0,0); document.documentElement.scrollTop = 0;">
+    <video id="bg-video" autoplay muted loop playsinline preload="metadata" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1920' height='1080'%3E%3Crect width='1920' height='1080' fill='%23200505'/%3E%3C/svg%3E">
         <source src="background.mp4" type="video/mp4" />
     </video>
     
