@@ -318,6 +318,11 @@ logoHome.addEventListener('click', () => {
 function goToStep(index, addToHistory = true) {
     if (index < 0 || index > 5) return;
 
+    // Reset all selections when going back to step 0 (start screen)
+    if (index === 0) {
+        resetQuizSelections();
+    }
+
     const activeStep = document.querySelector('.quiz-step.active');
     const nextStepEl = document.getElementById(`step-${index}`);
 
@@ -331,15 +336,88 @@ function goToStep(index, addToHistory = true) {
 
             if (nextStepEl) {
                 nextStepEl.style.display = 'flex';
-                setTimeout(() => nextStepEl.classList.add('active'), 50);
+                setTimeout(() => {
+                    nextStepEl.classList.add('active');
+                    updateStepButtonState(index);
+                }, 50);
             }
         }, 400);
     } else if (nextStepEl) {
         nextStepEl.classList.add('active');
+        updateStepButtonState(index);
     }
 
     currentStep = index;
     if (addToHistory) pushHistory(index);
+}
+
+// Update button state when entering a step
+function updateStepButtonState(stepIndex) {
+    const stepEl = document.getElementById(`step-${stepIndex}`);
+    if (!stepEl) return;
+    
+    const nextBtn = stepEl.querySelector('.next-btn');
+    if (!nextBtn) return;
+    
+    // Step 0: Always enabled
+    if (stepIndex === 0) {
+        nextBtn.disabled = false;
+    }
+    // Step 1: Mood - check if mood is selected
+    else if (stepIndex === 1) {
+        nextBtn.disabled = !selections.mood;
+    }
+    // Step 2: Genres - check if at least one genre selected
+    else if (stepIndex === 2) {
+        nextBtn.disabled = selections.genres.length === 0;
+    }
+    // Step 3: Time - check if time is selected
+    else if (stepIndex === 3) {
+        nextBtn.disabled = !selections.time;
+    }
+    // Step 4: Platforms - always enabled (can select none to search all platforms)
+    else if (stepIndex === 4) {
+        nextBtn.disabled = false;
+    }
+}
+
+// Reset all quiz selections and UI
+function resetQuizSelections() {
+    // Reset selections object
+    selections = { mood: null, time: null, genres: [], platforms: [] };
+    
+    // Remove all selected classes from option cards (mood, time, genres)
+    document.querySelectorAll('.option-card.selected').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Reset platform checkboxes and remove selected class from platform cards
+    document.querySelectorAll('input[name="platform"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    
+    document.querySelectorAll('.platform-card.selected').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Reset "Select All" button text
+    const selectAllBtn = document.getElementById('select-all-platforms');
+    if (selectAllBtn) {
+        selectAllBtn.innerHTML = '<i class="fas fa-check-double"></i> Select All';
+    }
+    
+    // Disable next buttons until selection is made
+    document.querySelectorAll('.next-btn').forEach(btn => {
+        btn.disabled = true;
+    });
+    
+    // Reset the "Next" button on step 0 (it should always be enabled)
+    const step0NextBtn = document.querySelector('#step-0 .next-btn');
+    if (step0NextBtn) step0NextBtn.disabled = false;
+    
+    // Reset genre button (should be disabled until a genre is selected)
+    const genreNextBtn = document.querySelector('#step-2 .next-btn');
+    if (genreNextBtn) genreNextBtn.disabled = true;
 }
 
 document.querySelectorAll('.next-btn').forEach(btn => {
@@ -374,13 +452,24 @@ setupSingleSelection('time-buttons', 'time');
 
 const genreParent = document.getElementById('genre-buttons');
 if (genreParent) {
+    const genreNextBtn = document.querySelector('#step-2 .next-btn');
+    
     genreParent.querySelectorAll('.option-card').forEach(btn => {
         btn.addEventListener('click', () => {
             const genreId = parseInt(btn.dataset.genreId, 10);
             const index = selections.genres.indexOf(genreId);
             btn.classList.toggle('selected');
-            if (index > -1) selections.genres.splice(index, 1);
-            else selections.genres.push(genreId);
+            
+            if (index > -1) {
+                selections.genres.splice(index, 1);
+            } else {
+                selections.genres.push(genreId);
+            }
+            
+            // Enable next button if at least one genre is selected
+            if (genreNextBtn) {
+                genreNextBtn.disabled = selections.genres.length === 0;
+            }
         });
     });
 }
@@ -1677,17 +1766,25 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeMovieFact();
     initializeSelectAllButton();
     
-    // Lazy load background video for better performance
+    // Optimize background video loading for mobile
     const bgVideo = document.getElementById('bg-video');
     if (bgVideo) {
         bgVideo.addEventListener('loadeddata', () => {
             bgVideo.classList.add('loaded');
         });
         
-        // Start loading video after a short delay to prioritize page content
+        // Detect mobile devices
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+        
+        // Delay video loading longer on mobile to prioritize content
+        const loadDelay = isMobile ? 500 : 100;
+        
         setTimeout(() => {
-            bgVideo.load();
-        }, 100);
+            // Only load video if user hasn't scrolled (still on page)
+            if (window.scrollY < 100) {
+                bgVideo.load();
+            }
+        }, loadDelay);
     }
     
     // Force scroll to top again after a tiny delay to override any other scripts
